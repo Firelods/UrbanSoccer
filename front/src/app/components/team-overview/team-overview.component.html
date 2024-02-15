@@ -1,0 +1,8 @@
+<!-- src/app/components/team-overview/team-overview.component.html -->
+<div class="team-container">
+  <div class="soccer-field">
+    <div *ngFor="let player of team" class="player" [ngClass]="player.position">
+      {{ player.position }}: {{ player.name }}
+    </div>
+  </div>
+</div>
