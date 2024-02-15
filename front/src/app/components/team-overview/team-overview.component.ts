@@ -2,6 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ApiService } from '../../services/api.service';
 
+interface TeamMember {
+  position: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-team-overview',
   standalone: true,
@@ -10,7 +15,7 @@ import { ApiService } from '../../services/api.service';
   styleUrl: './team-overview.component.scss',
 })
 export class TeamOverviewComponent {
-  team = [
+  team: TeamMember[] = [
     { position: 'Goalkeeper', name: 'Loic' },
     { position: 'Defender', name: 'Payet' },
     // ... other positions
@@ -21,13 +26,8 @@ export class TeamOverviewComponent {
   }
 
   fetchTeamData() {
-    this.apiService.getTeam().subscribe(
-      (data) => {
-        this.team = data;
-      },
-      (error) => {
-        // Handle error scenario
-      }
-    );
+    this.apiService.getTeam().subscribe((response: any) => {
+      this.team = response.teamMembers;
+    });
   }
 }

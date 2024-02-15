@@ -7,11 +7,12 @@ import {
 } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

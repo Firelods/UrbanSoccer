@@ -15,6 +15,7 @@ export class AbsenceManagementComponent {
   onDateSelect(date: Date): void {
     this.selectedDate = date;
     // Logic to handle date selection
+    console.log('Selected date: ', date);
   }
 
   constructor(private apiService: ApiService) {
@@ -23,14 +24,9 @@ export class AbsenceManagementComponent {
 
   validateAbsence() {
     if (this.selectedDate) {
-      this.apiService.recordAbsence(this.selectedDate).subscribe(
-        (response) => {
-          // Handle response
-        },
-        (error) => {
-          // Handle error scenario
-        }
-      );
+      this.apiService.recordAbsence(this.selectedDate).subscribe((response) => {
+        // Handle response
+      });
     }
   }
 }
