@@ -1,12 +1,12 @@
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 from flask_jwt_extended import create_access_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from app import app
 from sqllite import User, db
 
+auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@app.route('/auth/register', methods=['POST'])
+@auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
 
@@ -25,7 +25,7 @@ def register():
     return jsonify({'message': 'User created successfully.'}), 201
 
 
-@app.route('/auth/login', methods=['POST'])
+@auth_bp.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
 
