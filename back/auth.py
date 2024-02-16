@@ -6,6 +6,7 @@ from sqllite import User, db
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+
 @auth_bp.route('/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -16,7 +17,7 @@ def register():
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'User already exists.'}), 409
 
-    hashed_password = generate_password_hash(data['password'], method='sha256')
+    hashed_password = generate_password_hash(data['password'])
 
     new_user = User(email=data['email'], name=data['name'], password=hashed_password, role=data['role'])
     db.session.add(new_user)

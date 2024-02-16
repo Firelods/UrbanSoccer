@@ -2,7 +2,9 @@ from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
+from absence_management import absence_bp
 from auth import auth_bp
+from match_scheduling import match_bp
 from sqllite import db
 
 
@@ -13,6 +15,9 @@ def create_app():
     app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this to a real secret key
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(match_bp)
+    app.register_blueprint(absence_bp)
+
 
     db.init_app(app)
     JWTManager(app)

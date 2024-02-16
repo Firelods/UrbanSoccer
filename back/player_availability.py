@@ -15,8 +15,7 @@ def update_availability():
 
     # Verify if the player and match exist, and if the status is valid
     player = User.query.get(data['player_id'])
-    match = Match.query.get(data['match_id'])
-    if not player or not match:
+    if not player:
         return jsonify({'message': 'Invalid player or match ID.'}), 404
 
     availability = PlayerAvailability.query.filter_by(player_id=player.id, match_id=match.id).first()

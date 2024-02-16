@@ -1,10 +1,12 @@
-from flask import request, jsonify
+from datetime import datetime
 
-from app import app
+from flask import request, jsonify, Blueprint
+
 from sqllite import Match, db
 
+match_bp = Blueprint('matches', __name__, url_prefix='/')
 
-@app.route('/matches', methods=['POST'])
+@match_bp.route('/matches', methods=['POST'])
 def schedule_match():
     data = request.get_json()
 
@@ -12,14 +14,21 @@ def schedule_match():
     if not all(key in data for key in ['date', 'opponent', 'location']):
         return jsonify({'message': 'Missing data for scheduling match.'}), 400
 
-    new_match = Match(date=data['date'], opponent=data['opponent'], location=data['location'])
+    # get date in the format YYYY-MM-DD
+    date=data['date']
+    if len(date) != 10 or date[4] != '-' or date[7] != '-':
+        return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+    #make date in python datetime format
+    date = datetime.strptime(date, '%Y-%m-%d')
+
+    new_match = Match(date=date, opponent=data['opponent'], location=data['location'])
     db.session.add(new_match)
     db.session.commit()
 
     return jsonify({'message': 'Match scheduled successfully.', 'match_id': new_match.id}), 201
 
 
-@app.route('/matches', methods=['GET'])
+@match_bp.route('/matches', methods=['GET'])
 def get_matches():
     matches = Match.query.all()
     matches_data = [{
