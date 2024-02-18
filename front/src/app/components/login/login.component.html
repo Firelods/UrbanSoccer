@@ -13,6 +13,8 @@
       <mat-error *ngIf="loginForm.get('password')!.invalid">Password is required.</mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Login</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.valid">Connexion</button>
   </form>
+  <button mat-raised-button color="primary" [routerLink]="['/register']" routerLinkActive="router-link-active">Pas de
+    compte ? Inscris toi</button>
 </div>

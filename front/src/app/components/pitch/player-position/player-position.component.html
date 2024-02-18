@@ -1,3 +1,6 @@
-<button mat-raised-button class="player-position" (click)="openPlayerDialog()">
-  Click to Add Player
-</button>
+@for (player of availablePlayers; track $index) {
+<h2>{{player}}</h2>
+<select name="players" id="players">
+  <option value="{{player.id}}">{{player.name}}</option>
+</select>
+}

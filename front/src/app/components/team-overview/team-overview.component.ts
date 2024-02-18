@@ -26,8 +26,8 @@ export class TeamOverviewComponent {
   }
 
   fetchTeamData() {
-    this.apiService.getTeam().subscribe((response: any) => {
-      this.team = response.teamMembers;
-    });
+    // this.apiService.getTeam().subscribe((response: any) => {
+    //   this.team = response.teamMembers;
+    // });
   }
 }

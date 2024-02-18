@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from '../environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -9,16 +10,29 @@ import { environment } from '../environment';
 export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(false);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string) {
-    return this.http.post<any>(`${environment.apiUrl}/auth/login`, { email, password });
+    return this.http.post<any>(`${environment.apiUrl}/auth/login`, {
+      email,
+      password,
+    });
+  }
+
+  register(email: string, password: string, role: string, name: string) {
+    return this.http.post<any>(`${environment.apiUrl}/auth/register`, {
+      email,
+      password,
+      role,
+      name,
+    });
   }
 
   setSession(authResult: any) {
     // Set the token in local storage
     localStorage.setItem('id_token', authResult.token);
     this.loggedIn.next(true);
+    this.router.navigate(['/matches']);
   }
 
   logout() {

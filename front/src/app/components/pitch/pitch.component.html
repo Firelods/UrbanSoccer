@@ -1,4 +1,28 @@
 <div class="pitch">
-  <!-- Placeholder for player positions, to be replaced with actual components -->
-  <app-player-position *ngFor="let position of positions"></app-player-position>
+  <h1>Composition pour le match contre {{match.opponent}} du <span class="date">{{this.date}}</span></h1>
+  @if (match.team_id!=null) {
+  @for (player of team.players; track $index) {
+  <h3>{{player.role}} : {{player.name}}</h3>
+  }
+  <svg width="250px" height="250px" viewBox="0 0 700 600" xmlns="http://www.w3.org/2000/svg">
+    <!-- Football Field SVG starts -->
+    <rect x="0" y="0" width="100%" height="100%" fill="green" />
+    <rect x="10%" y="10%" width="80%" height="80%" fill="none" stroke="white" stroke-width="2" />
+    <!-- <line x1="10%" y1="50%" x2="90%" y2="50%" stroke="white" stroke-width="2" /> -->
+    <!-- Add more field details here -->
+    <!-- Football Field SVG ends -->
+    <g *ngFor="let player of team.players; let i = index">
+      <circle [attr.cx]="player.position?.y" [attr.cy]="player.position?.x" r="20" fill="blue" />
+      <text [attr.x]="player.position?.y" [attr.y]="player.position!.x + 30" text-anchor="middle" fill="white"
+        font-size="4em">{{player.name}}</text>
+    </g>
+  </svg>
+  }
+  @else {
+  <p>Vous n'avez pas encore de composition pour ce match.</p>
+  <button mat-raised-button color="primary" (click)="createTeam()">Créer une
+    équipe aléatoire</button>
+  }
+  <button mat-raised-button color="primary" [routerLink]="['/matches']" routerLinkActive="router-link-active">Revenir
+    aux matchs</button>
 </div>
