@@ -14,8 +14,12 @@ class User(db.Model):
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
-    player_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    players = db.relationship('User', secondary='team_players', backref=db.backref('teams', lazy='dynamic'))
 
+
+class TeamPlayers(db.Model):
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'), primary_key=True)
+    player_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
 
 class Absence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,9 +30,10 @@ class Absence(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
+    # date with time
+    date = db.Column(db.DateTime, nullable=False)
     opponent = db.Column(db.String(120), nullable=False)
-    location = db.Column(db.String(250))
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
 
 
 class PlayerAvailability(db.Model):

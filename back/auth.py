@@ -1,5 +1,5 @@
 from flask import request, jsonify, Blueprint
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, decode_token
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqllite import User, db
@@ -37,3 +37,17 @@ def login():
         return jsonify({'token': token}), 200
 
     return jsonify({'message': 'Invalid credentials'}), 401
+
+
+def token_required():
+    try:
+        token = request.headers.get('Authorization').split(" ")[1]
+    except:
+        raise Exception("Token manquant")
+    if token is None:
+        raise Exception("Token manquant")
+    try:
+        decoded_token = decode_token(token)
+        return decoded_token["login_id"]
+    except:
+        raise Exception("Token invalide")

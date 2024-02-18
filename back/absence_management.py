@@ -2,19 +2,21 @@ from datetime import datetime
 
 from flask import request, jsonify, Blueprint
 
+from auth import token_required
 from sqllite import User, Absence, db, Match
 
 absence_bp = Blueprint('absence', __name__, url_prefix='/')
 
+
 @absence_bp.route('/absences', methods=['POST'])
 def record_absence():
     data = request.get_json()
-
+    email = token_required()['email']
     # Validate the incoming data
-    if 'player_id' not in data or 'date' not in data:
-        return jsonify({'message': 'Missing player_id or date_of_absence.'}), 400
+    if 'date' not in data:
+        return jsonify({'message': 'Missing  date_of_absence.'}), 400
 
-    player = User.query.get(data['player_id'])
+    player = User.query.get(email)
     if not player:
         return jsonify({'message': 'Player not found.'}), 404
         # get date in the format YYYY-MM-DD
@@ -29,6 +31,7 @@ def record_absence():
 
     return jsonify({'message': 'Absence recorded successfully.'}), 201
 
+
 @absence_bp.route('/absences/<int:absence_id>', methods=['DELETE'])
 def delete_absence(absence_id):
     absence = Absence.query.get(absence_id)
@@ -40,11 +43,13 @@ def delete_absence(absence_id):
 
     return jsonify({'message': 'Absence deleted successfully.'}), 200
 
+
 @absence_bp.route('/absences', methods=['GET'])
 def get_absences():
-    player_id = request.args.get('player_id')
-    if player_id:
-        absences = Absence.query.filter_by(player_id=player_id).all()
+    email = token_required()['email']
+    all = request.args.get('all')
+    if not all:
+        absences = Absence.query.filter_by(email=email).all()
     else:
         absences = Absence.query.all()
 
@@ -56,7 +61,6 @@ def get_absences():
     } for absence in absences]
 
     return jsonify(absences_data), 200
-
 
 
 # make a endpoint to get all present players on a given match
@@ -83,4 +87,3 @@ def get_present_players():
     } for player in players if player.id not in absent_players]
 
     return jsonify(present_players), 200
-
