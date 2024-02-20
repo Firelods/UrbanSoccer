@@ -19,7 +19,7 @@ jobs:
 
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SSH_IP }} "
+          ssh ${{ secrets.USER }}@${{ secrets.SSH_IP }} "
           cd /home/ubuntu/UrbanSoccer/back/ &&
           git pull &&
           docker build . --network=host &&
