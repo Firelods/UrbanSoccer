@@ -22,4 +22,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER }}@${{ secrets.SSH_IP }} "
           cd /home/ubuntu/UrbanSoccer/back/ &&
           git pull &&
+          docker build . &&
           docker-compose up -d"
