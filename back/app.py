@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from werkzeug.security import generate_password_hash
 
 from absence_management import absence_bp
 from auth import auth_bp
