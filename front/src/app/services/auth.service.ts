@@ -30,6 +30,10 @@ export class AuthService {
 
   setSession(authResult: any) {
     // Set the token in local storage
+    if (!authResult.token) {
+      console.error('Inscription eronée');
+      return;
+    }
     localStorage.setItem('id_token', authResult.token);
     this.loggedIn.next(true);
     this.router.navigate(['/matches']);
@@ -42,5 +46,9 @@ export class AuthService {
 
   isLoggedIn() {
     return this.loggedIn.asObservable();
+  }
+
+  getSession() {
+    return localStorage.getItem('id_token');
   }
 }

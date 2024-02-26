@@ -1,7 +1,21 @@
-// src/app/components/login/login.component.scss
 .login-container {
   max-width: 300px;
   margin: auto;
-  padding: 20px;
+  padding: 1em;
   // Add more styles as per design requirements
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+}
+.center {
+  width: 100%;
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

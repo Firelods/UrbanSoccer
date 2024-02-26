@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class LoginComponent {
   loginForm: FormGroup;
-
+  loginValid: boolean = true;
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -38,11 +40,24 @@ export class LoginComponent {
 
   onLogin() {
     if (this.loginForm.valid) {
+      // ...
+
       this.authService
         .login(this.loginForm.value.email, this.loginForm.value.password)
+        .pipe(
+          catchError((error) => {
+            if (error.status === 401) {
+              this.loginValid = false;
+            }
+            // rethrow the error to be caught by the final subscribe block if needed
+            return of(error);
+          })
+        )
         .subscribe((data) => {
-          this.authService.setSession(data);
-          // Navigate to team overview or another route upon success
+          if (data.status !== 401) {
+            console.log(data);
+            this.authService.setSession(data);
+          }
         });
     }
   }

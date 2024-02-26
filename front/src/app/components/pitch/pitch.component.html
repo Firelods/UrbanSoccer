@@ -1,5 +1,5 @@
 <div class="pitch">
-  <h1>Composition pour le match contre {{match.opponent}} du <span class="date">{{this.date}}</span></h1>
+  <h1>Composition pour le match contre {{match.opponent}} du <span class="date">{{match.date | datePipe}}</span></h1>
   @if (match.team_id!=null) {
   @for (player of team.players; track $index) {
   <h3>{{player.role}} : {{player.name}}</h3>
@@ -20,6 +20,9 @@
   }
   @else {
   <p>Vous n'avez pas encore de composition pour ce match.</p>
+  <mat-error *ngIf="errorGenerate">
+    Erreur lors de la génération de l'équipe : {{errorGenerate}}
+  </mat-error>
   <button mat-raised-button color="primary" (click)="createTeam()">Créer une
     équipe aléatoire</button>
   }

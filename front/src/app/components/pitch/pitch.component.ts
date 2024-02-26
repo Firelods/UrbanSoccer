@@ -7,6 +7,9 @@ import { ApiService } from '../../services/api.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { Player } from '../../interfaces/player';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { catchError, of } from 'rxjs';
+import { CustomDatePipe } from '../../pipe/date.pipe';
 
 @Component({
   selector: 'app-pitch',
@@ -17,7 +20,9 @@ import { Player } from '../../interfaces/player';
     PlayerPositionComponent,
     CommonModule,
     MatButtonModule,
+    MatFormFieldModule,
     RouterModule,
+    CustomDatePipe,
   ],
 })
 export class PitchComponent {
@@ -41,6 +46,7 @@ export class PitchComponent {
     name: 'Equipe 1',
     players: [],
   };
+  errorGenerate: string = '';
 
   constructor(
     private apiService: ApiService,
@@ -74,7 +80,19 @@ export class PitchComponent {
   createTeam() {
     this.apiService
       .createTeam(this.match)
-      .subscribe((response: { message: string; team: Team }) => {
+      .pipe(
+        catchError((error) => {
+          if (error.status === 400) {
+            this.errorGenerate = error.error.message;
+          }
+          // rethrow the error to be caught by the final subscribe block if needed
+          return of(error);
+        })
+      )
+      .subscribe((response: any) => {
+        if (response.status > 300) {
+          return;
+        }
         this.team = response.team;
         this.match.team_id = this.team.id;
         this.setAllPlayersPosition();

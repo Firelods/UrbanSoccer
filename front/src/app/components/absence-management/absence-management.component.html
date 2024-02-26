@@ -1,2 +1,13 @@
-<mat-calendar [(selected)]="selectedDate"></mat-calendar>
-<button mat-button (click)="validateAbsence()">Valider</button>
+<div class="container">
+  <button mat-raised-button color="primary" routerLink="/matches">Matchs</button>
+
+  <!-- <mat-calendar [(selected)]="selectedDate"></mat-calendar> -->
+  <mat-form-field class="hidden">
+    <ngx-multiple-dates [matDatepicker]="pickerCalendar" placeholder="Calendar" name="modelCalendar"
+      [(ngModel)]="dateAbsences">
+    </ngx-multiple-dates>
+  </mat-form-field>
+  <h3>Clique sur le calendrier pour ajouter ou retirer des absences</h3>
+  <mat-calendar #pickerCalendar></mat-calendar>
+  <button color="primary" mat-raised-button (click)="validateAbsence()">Valider</button>
+</div>

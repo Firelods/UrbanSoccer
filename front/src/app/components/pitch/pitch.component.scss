@@ -3,6 +3,11 @@
   // background-image: url("../../../assets/pitch-background.png");
   position: relative;
   // Define more styles for pitch lines and areas
+  height: 50vh;
+  padding-top: 3em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .player-position {
@@ -10,4 +15,8 @@
   height: 50px;
   background-color: #fff;
   // More styles for positioning and appearance
+}
+
+mat-error {
+  color: red;
 }

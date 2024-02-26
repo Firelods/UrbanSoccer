@@ -1,0 +1,17 @@
+header {
+  h1 {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    margin-bottom: 0;
+    font-size: 2em;
+  }
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  img {
+    width: 30%;
+  }
+}

@@ -21,7 +21,7 @@ export class AuthGuard {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('id_token');
     if (token) {
       return true;
     } else {

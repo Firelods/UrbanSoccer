@@ -1,0 +1,16 @@
+<div class="container">
+  @if(this.mailUser){
+  <h2>Connecté sur l'adresse mail {{mailUser}}</h2>
+  <button mat-raised-button color="primary" [routerLink]="['/matches']" routerLinkActive="router-link-active">Voir les
+    matchs</button>
+  <button mat-raised-button color="primary" [routerLink]="['/absence-management']"
+    routerLinkActive="router-link-active">Gérer
+    les absences</button>
+  <button mat-raised-button color="primary" (click)="disconnect()">Deconnexion</button>
+  }
+  @else{
+  <h2>Connectez-vous pour voir votre profil</h2>
+  <button mat-raised-button color="primary" [routerLink]="['/login']" routerLinkActive="router-link-active">Se
+    connecter</button>
+  }
+</div>

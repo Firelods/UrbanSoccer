@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AuthService } from '../../services/auth.service';
 import { roles } from '../../role';
 import { MatButtonModule } from '@angular/material/button';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -32,8 +33,8 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class RegisterComponent {
   registerForm: FormGroup;
-  roles = roles;
-
+  roles = Array.from(new Set(roles));
+  registerValid: boolean = true;
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -52,7 +53,19 @@ export class RegisterComponent {
           this.registerForm.value.role,
           this.registerForm.value.nom
         )
+        .pipe(
+          catchError((error) => {
+            if (error.status > 300) {
+              this.registerValid = false;
+            }
+            // rethrow the error to be caught by the final subscribe block if needed
+            return of(error);
+          })
+        )
         .subscribe((data) => {
+          if (data.status > 300) {
+            return;
+          }
           this.authService.setSession(data);
           // Navigate to team overview or another route upon success
         });

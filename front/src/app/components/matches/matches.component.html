@@ -1,4 +1,7 @@
 <div class="container">
+  <button mat-raised-button color="primary" routerLink="/absence-management">Une absence ?</button>
+  <button mat-raised-button color="primary" routerLink="/profile">Profil</button>
+
   <h1>Liste des Matchs</h1>
   <div class="matches">
     @for ( match of matches; track $index) {
@@ -32,7 +35,7 @@
       <input matInput formControlName="heure" type="time" id="heure" name="heure" required>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Create</button>
+    <button mat-raised-button color="primary" type="submit">Créer</button>
   </form>
 
 </div>

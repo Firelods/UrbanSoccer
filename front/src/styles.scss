@@ -1,13 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
-
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import "ngx-multiple-dates/prebuilt-themes/indigo-pink.css";
 html,
 body {
-  height: 100%;
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-  padding: 1em;
+
+  padding: 2em;
 }
 
 * {
