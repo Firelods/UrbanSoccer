@@ -52,7 +52,11 @@ def get_absences():
         return jsonify({'message': 'Token invalide'}), 401
     all = request.args.get('all')
     if not all:
-        absences = Absence.query.filter_by(email=email).all()
+        # get player by email
+        player = User.query.get(email)
+        if not player:
+            return jsonify({'message': 'Player not found.'}), 404
+        absences = Absence.query.filter_by(player_id=player.id).all()
     else:
         absences = Absence.query.all()
 
