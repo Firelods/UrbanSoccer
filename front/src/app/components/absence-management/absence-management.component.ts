@@ -37,7 +37,13 @@ import { RouterModule } from '@angular/router';
 export class AbsenceManagementComponent {
   dateAbsences?: Date[];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {
+    this.apiService.getAbsences().subscribe((absences) => {
+      this.dateAbsences = absences.map(
+        (absence) => new Date(absence.date_of_absence)
+      );
+    });
+  }
 
   validateAbsence() {
     if (this.dateAbsences) {

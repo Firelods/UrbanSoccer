@@ -56,8 +56,11 @@ export class ApiService {
   }
 
   private recordAbsence(date: Date) {
+    // make date format YYYY-MM-DD
+    const dateStr = date.toISOString().split('T')[0];
+
     return this.http.post(`${environment.apiUrl}/absences`, {
-      date,
+      date: dateStr,
     });
   }
 
