@@ -11,12 +11,12 @@ absence_bp = Blueprint('absence', __name__, url_prefix='/')
 @absence_bp.route('/absences', methods=['POST'])
 def record_absence():
     data = request.get_json()
-    email = token_required()['email']
+    email = token_required()
     # Validate the incoming data
     if 'date' not in data:
         return jsonify({'message': 'Missing  date_of_absence.'}), 400
 
-    player = User.query.get(email)
+    player = User.query.filter_by(email=email).first()
     if not player:
         return jsonify({'message': 'Player not found.'}), 404
         # get date in the format YYYY-MM-DD
@@ -52,8 +52,8 @@ def get_absences():
         return jsonify({'message': 'Token invalide'}), 401
     all = request.args.get('all')
     if not all:
-        # get player by email
-        player = User.query.get(email)
+        # search the player by its email
+        player = User.query.filter_by(email=email).first()
         if not player:
             return jsonify({'message': 'Player not found.'}), 404
         absences = Absence.query.filter_by(player_id=player.id).all()
