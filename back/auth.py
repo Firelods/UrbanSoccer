@@ -48,6 +48,6 @@ def token_required():
         raise Exception("Token manquant")
     try:
         decoded_token = decode_token(token)
-        return decoded_token["login_id"]
+        return decoded_token["sub"]
     except:
         raise Exception("Token invalide")

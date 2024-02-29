@@ -46,7 +46,10 @@ def delete_absence(absence_id):
 
 @absence_bp.route('/absences', methods=['GET'])
 def get_absences():
-    email = token_required()['email']
+    try:
+        email = token_required()
+    except:
+        return jsonify({'message': 'Token invalide'}), 401
     all = request.args.get('all')
     if not all:
         absences = Absence.query.filter_by(email=email).all()
