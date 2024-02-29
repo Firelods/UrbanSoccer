@@ -35,21 +35,13 @@ import { RouterModule } from '@angular/router';
   styleUrl: './absence-management.component.scss',
 })
 export class AbsenceManagementComponent {
-  selectedDate: Date | null = null;
   dateAbsences?: Date[];
-  onDateSelect(date: Date): void {
-    this.selectedDate = date;
-    // Logic to handle date selection
-    console.log('Selected date: ', date);
-  }
 
   constructor(private apiService: ApiService) {}
 
   validateAbsence() {
-    if (this.selectedDate) {
-      this.apiService.recordAbsence(this.selectedDate).subscribe((response) => {
-        // Handle response
-      });
+    if (this.dateAbsences) {
+      this.apiService.postAbsence(this.dateAbsences);
     }
   }
 }

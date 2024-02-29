@@ -14,7 +14,7 @@ import { jwtDecode } from 'jwt-decode';
 export class ProfileComponent {
   mailUser?: string;
   constructor(private authService: AuthService, private router: Router) {
-    let sessionToken = this.authService.getSession();
+    let sessionToken = this.authService.getToken();
     // decode jwt token to get user email
     if (sessionToken) {
       try {

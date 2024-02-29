@@ -4,24 +4,26 @@ import { environment } from '../environment';
 import { Match } from '../interfaces/match';
 import { Player } from '../interfaces/player';
 import { Team } from '../interfaces/team';
+import { Absence } from '../interfaces/absence';
+import { Observable } from 'rxjs';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:5000'; // URL to web API
+  constructor(
+    private eventService: NotificationService,
+    private http: HttpClient
+  ) {}
 
-  constructor(private http: HttpClient) {}
-
+  someFunction() {
+    // When you want to show a snackbar
+    this.eventService.sendSnackBarMessage('Your message');
+  }
   // Example function to get team data
   getTeam(team_id: number) {
     return this.http.get<Team>(`${environment.apiUrl}/team/${team_id}`);
-  }
-
-  recordAbsence(date: Date) {
-    return this.http.post(`${environment.apiUrl}/absences`, {
-      date,
-    });
   }
 
   getAvailablePlayersOnMatch(match: Match) {
@@ -51,5 +53,30 @@ export class ApiService {
       `${environment.apiUrl}/team/random`,
       { match_id: match.id }
     );
+  }
+
+  private recordAbsence(date: Date) {
+    return this.http.post(`${environment.apiUrl}/absences`, {
+      date,
+    });
+  }
+
+  postAbsence(absence: Date[]) {
+    // get actual absences and for each new absence, post it
+    this.getAbsences().subscribe((absences) => {
+      absence.forEach((date) => {
+        if (!absences.find((a) => a.date_of_absence === date)) {
+          this.recordAbsence(date).subscribe(() => {
+            this.eventService.sendSnackBarMessage(
+              `Absence enregistrée pour le ${date}\n`
+            );
+          });
+        }
+      });
+    });
+  }
+
+  getAbsences(): Observable<Absence[]> {
+    return this.http.get<Absence[]>(`${environment.apiUrl}/absences`);
   }
 }

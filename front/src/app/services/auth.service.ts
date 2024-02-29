@@ -48,7 +48,7 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
-  getSession() {
+  getToken() {
     return localStorage.getItem('id_token');
   }
 }
