@@ -30,10 +30,10 @@ class Absence(db.Model):
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # date with time
     date = db.Column(db.DateTime, nullable=False)
     opponent = db.Column(db.String(120), nullable=False)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
+    semaine = db.Column(db.String(120), nullable=True)
 
 
 class PlayerAvailability(db.Model):
