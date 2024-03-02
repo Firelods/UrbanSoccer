@@ -1,10 +1,10 @@
+import random
 from collections import Counter
-from datetime import timedelta
 
 from flask import jsonify, request, Blueprint
-from sqlalchemy.orm import joinedload
+from sqlalchemy import func
 
-from sqllite import db, Team, User, Match, Absence
+from sqllite import db, Team, User, Match, Absence, TeamPlayers
 
 team_bp = Blueprint('team', __name__, url_prefix='/')
 
@@ -36,37 +36,40 @@ def create_random_team():
     if not match:
         return jsonify({'message': 'Match not found.'}), 404
 
-    # Find start and end of the week for the match date
-    start_week = match.date - timedelta(days=match.date.weekday())
-    end_week = start_week + timedelta(days=6)
+    # Count how many times each player has played in every team
+    player_play_count = Counter()
+    player_team_counts = db.session.query(
+        TeamPlayers.player_id,
+        func.count(TeamPlayers.team_id).label('times_played')
+    ).group_by(TeamPlayers.player_id).all()
 
-    # Get all matches in the same week
-    matches_same_week = Match.query.filter(Match.date.between(start_week, end_week)).all()
-
-    # Get all teams formed in the same week to check player participation
-    team_ids = [match.team_id for match in matches_same_week if match.team_id]
-    teams_same_week = Team.query.filter(Team.id.in_(team_ids)).options(joinedload(Team.players)).all()
-
-    # Count how many times each player has played this week
-    player_play_count = Counter(player.id for team in teams_same_week for player in team.players)
-
+    # Fill the player_play_count Counter with the query results
+    player_play_count = Counter({player_id: times_played for player_id, times_played in player_team_counts})
+    print(player_play_count)
     # Filter players based on absences
-    absences = Absence.query.filter_by(date_of_absence=match.date).all()
+    print(match.date.date())
+    match_date = match.date.date()
+    #print all absences
+    print(Absence.query.all())
+    absences = Absence.query.filter_by(date_of_absence=match_date).all()
+    print(absences)
     absent_players = [absence.player_id for absence in absences]
 
     # Prioritize players based on their play count
     players = User.query.all()
+    random.shuffle(players)
+
     present_players = sorted(
         [player for player in players if player.id not in absent_players],
         key=lambda player: player_play_count[player.id]
     )
-
+    # shuffle present player
     if len(present_players) < 5:
         return jsonify({'message': 'Not enough players available for a team.'}), 400
 
     # Team creation logic (similar to before, but consider play count)
     new_team = Team(name=f'Team {match.id}')
-    roles_needed = {'Gardien': 1, 'Défenseur': 2, 'Attaquant': 2}
+    roles_needed = {'Gardien': 1, 'DÃ©fenseur': 2, 'Attaquant': 2}
     for role, count_needed in roles_needed.items():
         role_players = [player for player in present_players if player.role == role]
         for player in role_players[:count_needed]:
@@ -74,8 +77,13 @@ def create_random_team():
             if role == 'Gardien':
                 break  # Ensure only one gardien is added
 
+    # add a random player not in the team to be a substitute
+    substitute = [player for player in present_players if player not in new_team.players]
+    random.shuffle(substitute)
+    if substitute:
+        new_team.players.append(substitute[0])
     # Verify team completeness
-    if len(new_team.players) < 5:
+    if len(new_team.players) < 6:
         return jsonify({'message': 'Not enough players available for a team.'}), 400
 
     # Commit the new team and update the match
