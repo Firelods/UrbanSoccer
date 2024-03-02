@@ -39,6 +39,7 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
+      code: ['', [Validators.required]],
       role: ['', [Validators.required]],
       nom: ['', [Validators.required]],
     });
@@ -50,6 +51,7 @@ export class RegisterComponent {
         .register(
           this.registerForm.value.email,
           this.registerForm.value.password,
+          this.registerForm.value.code,
           this.registerForm.value.role,
           this.registerForm.value.nom
         )
@@ -70,9 +72,5 @@ export class RegisterComponent {
           // Navigate to team overview or another route upon success
         });
     }
-  }
-
-  onChange() {
-    console.log(this.registerForm);
   }
 }

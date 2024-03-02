@@ -19,10 +19,17 @@ export class AuthService {
     });
   }
 
-  register(email: string, password: string, role: string, name: string) {
+  register(
+    email: string,
+    password: string,
+    code: string,
+    role: string,
+    name: string
+  ) {
     return this.http.post<any>(`${environment.apiUrl}/auth/register`, {
       email,
       password,
+      special_password: code,
       role,
       name,
     });

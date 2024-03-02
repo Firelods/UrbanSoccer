@@ -1,7 +1,7 @@
 <!-- src/app/components/login/login.component.html -->
 <div class="center">
   <div class="login-container">
-    <form [formGroup]="registerForm" (ngSubmit)="onRegister()" (change)="onChange()">
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" placeholder="email@gmail.com">
@@ -13,7 +13,11 @@
         <input matInput formControlName="password" type="password">
         <mat-error *ngIf="registerForm.get('password')!.invalid">Password is required.</mat-error>
       </mat-form-field>
-
+      <mat-form-field appearance="fill">
+        <mat-label>Code</mat-label>
+        <input matInput formControlName="code" type="code">
+        <mat-error *ngIf="registerForm.get('code')!.invalid">Code is required.</mat-error>
+      </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nom</mat-label>
         <input matInput formControlName="nom" type="nom">

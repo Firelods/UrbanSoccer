@@ -1,7 +1,9 @@
+import os
+
 from flask import request, jsonify, Blueprint
 from flask_jwt_extended import create_access_token, decode_token
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from dotenv import dotenv_values
 from sqllite import User, db
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -11,8 +13,9 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     data = request.get_json()
 
-    # Validate the incoming data for required fields and email format
-
+    # check if the special password is equal to the one in .env
+    if data['special_password'] != dotenv_values(".env")["BLUES_PASSWORD"]:
+        return jsonify({'message': 'Invalid special password'}), 401
     # Check if the user already exists
     if User.query.filter_by(email=data['email']).first():
         return jsonify({'message': 'User already exists.'}), 409
@@ -23,7 +26,9 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    return jsonify({'message': 'User created successfully.'}), 201
+    token = create_access_token(identity=data['email'])
+
+    return jsonify({'message': 'User created successfully.', 'token': token}), 201
 
 
 @auth_bp.route('/login', methods=['POST'])
