@@ -13,19 +13,30 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class ProfileComponent {
   mailUser?: string;
-  constructor(private authService: AuthService, private router: Router) {
+  role?: string;
+  name?: string;
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {
     let sessionToken = this.authService.getToken();
     // decode jwt token to get user email
     if (sessionToken) {
-      try {
-        const decodedToken = jwtDecode(sessionToken);
-
-        if (decodedToken && decodedToken.sub) {
-          this.mailUser = decodedToken.sub;
-        }
-      } catch (error) {
-        console.error('Error decoding token', error);
+      let mail = this.authService.getEmail();
+      if (!mail) {
+        return;
       }
+      this.mailUser = mail;
+      let name = this.authService.getName();
+      if (!name) {
+        return;
+      }
+      this.name = name;
+      let role = this.authService.getRole();
+      if (!role) {
+        return;
+      }
+      this.role = role;
     }
   }
 

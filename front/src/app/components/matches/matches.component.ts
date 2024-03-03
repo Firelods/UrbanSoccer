@@ -14,6 +14,7 @@ import {
 } from '@angular/forms';
 import { CustomDatePipe } from '../../pipe/date.pipe';
 import { MatCardModule } from '@angular/material/card';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-matches',
@@ -35,12 +36,18 @@ import { MatCardModule } from '@angular/material/card';
 export class MatchesComponent {
   matches: Match[] = [];
   newMatchForm: FormGroup;
-  constructor(private apiService: ApiService, private fb: FormBuilder) {
+  isAdmin: boolean;
+  constructor(
+    private apiService: ApiService,
+    private fb: FormBuilder,
+    private authService: AuthService
+  ) {
     this.newMatchForm = this.fb.group({
       opponent: ['', [Validators.required]],
       date: ['', [Validators.required]],
       heure: ['', [Validators.required]],
     });
+    this.isAdmin = this.authService.isAdmin();
   }
 
   ngOnInit(): void {

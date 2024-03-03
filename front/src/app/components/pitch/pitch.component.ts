@@ -10,6 +10,7 @@ import { Player } from '../../interfaces/player';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { catchError, of } from 'rxjs';
 import { CustomDatePipe } from '../../pipe/date.pipe';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-pitch',
@@ -47,12 +48,16 @@ export class PitchComponent {
     players: [],
   };
   errorGenerate: string = '';
+  isAdmin: boolean;
 
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
-    private router: Router
-  ) {}
+    private router: Router,
+    private authService: AuthService,
+  ) {
+    this.isAdmin = this.authService.isAdmin();
+  }
 
   ngOnInit(): void {
     let id = this.route.snapshot.paramMap.get('id');
@@ -87,7 +92,7 @@ export class PitchComponent {
           }
           // rethrow the error to be caught by the final subscribe block if needed
           return of(error);
-        })
+        }),
       )
       .subscribe((response: any) => {
         if (response.status > 300) {

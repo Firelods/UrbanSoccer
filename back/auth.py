@@ -26,7 +26,8 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    token = create_access_token(identity=data['email'])
+    # add admin state in token
+    token = create_access_token(identity=data['email'], additional_claims={"admin": new_user.admin, "name": new_user.name, "role": new_user.role})
 
     return jsonify({'message': 'User created successfully.', 'token': token}), 201
 
@@ -38,7 +39,8 @@ def login():
     user = User.query.filter_by(email=data['email']).first()
 
     if user and check_password_hash(user.password, data['password']):
-        token = create_access_token(identity=data['email'])
+        token = create_access_token(identity=data['email'],
+                                    additional_claims={"admin": user.admin, "name": user.name, "role": user.role})
         return jsonify({'token': token}), 200
 
     return jsonify({'message': 'Invalid credentials'}), 401

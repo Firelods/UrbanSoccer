@@ -4,38 +4,39 @@
 
   <h1>Liste des Matchs</h1>
   <div class="matches">
-    @for ( match of matches; track $index) {
-    <mat-card class="match">
-      <mat-card-header><mat-card-title>{{match.opponent}}</mat-card-title></mat-card-header>
-      <mat-card-content>{{match.date | datePipe}}</mat-card-content>
-      <mat-card-actions>
-        <button mat-raised-button color="primary" [routerLink]="['/pitch', match.id]"
-          routerLinkActive="router-link-active">
-          Voir l'équipe
-        </button>
-      </mat-card-actions>
-    </mat-card>
+    @for (match of matches; track $index) {
+      <mat-card class="match">
+        <mat-card-header
+          ><mat-card-title>{{ match.opponent }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>{{ match.date | datePipe }}</mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" [routerLink]="['/pitch', match.id]" routerLinkActive="router-link-active">
+            Voir l'équipe
+          </button>
+        </mat-card-actions>
+      </mat-card>
     }
   </div>
 
-  <form [formGroup]="newMatchForm" (ngSubmit)="onPost()">
+  @if (this.isAdmin) {
+    <form [formGroup]="newMatchForm" (ngSubmit)="onPost()">
+      <h2>Créer un nouveau match</h2>
+      <mat-form-field>
+        <mat-label>Adversaire</mat-label>
+        <input matInput formControlName="opponent" type="text" id="opponent" name="opponent" required />
+      </mat-form-field>
 
-    <h2>Créer un nouveau match</h2>
-    <mat-form-field>
-      <mat-label>Adversaire</mat-label>
-      <input matInput formControlName="opponent" type="text" id="opponent" name="opponent" required>
-    </mat-form-field>
+      <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input matInput formControlName="date" type="date" id="date" name="date" required />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Heure</mat-label>
+        <input matInput formControlName="heure" type="time" id="heure" name="heure" required />
+      </mat-form-field>
 
-    <mat-form-field>
-      <mat-label>Date</mat-label>
-      <input matInput formControlName="date" type="date" id="date" name="date" required>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Heure</mat-label>
-      <input matInput formControlName="heure" type="time" id="heure" name="heure" required>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="submit">Créer</button>
-  </form>
-
+      <button mat-raised-button color="primary" type="submit">Créer</button>
+    </form>
+  }
 </div>

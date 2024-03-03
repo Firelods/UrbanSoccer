@@ -9,6 +9,7 @@ class User(db.Model):
     password = db.Column(db.String(120), nullable=False)
     name = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(50), nullable=False)
+    admin = db.Column(db.Boolean, default=False)
 
 
 class Team(db.Model):
