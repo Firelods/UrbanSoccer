@@ -4,39 +4,38 @@
     <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email" placeholder="email@gmail.com">
+        <input matInput formControlName="email" placeholder="email@gmail.com" />
         <mat-error *ngIf="registerForm.get('email')!.invalid">Please enter a valid email.</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password">
+        <input matInput formControlName="password" type="password" />
         <mat-error *ngIf="registerForm.get('password')!.invalid">Password is required.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Code</mat-label>
-        <input matInput formControlName="code" type="code">
+        <input matInput formControlName="code" type="code" />
         <mat-error *ngIf="registerForm.get('code')!.invalid">Code is required.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nom</mat-label>
-        <input matInput formControlName="nom" type="nom">
+        <input matInput formControlName="nom" type="nom" />
         <mat-error *ngIf="registerForm.get('nom')!.invalid">Nom is required.</mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Role</mat-label>
         <mat-select formControlName="role" type="role" name="players" id="players">
           @for (role of roles; track $index) {
-          <mat-option [value]="role">{{role}}</mat-option>
+            <mat-option [value]="role">{{ role }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
-      <mat-error *ngIf="!registerValid">
-        Erreur lors de l'inscription
-      </mat-error>
+      <mat-error *ngIf="!registerValid"> Erreur lors de l'inscription </mat-error>
       <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid">S'inscrire</button>
     </form>
-    <button mat-raised-button color="primary" [routerLink]="['/login']" routerLinkActive="router-link-active">Déjà un
-      compte ? connecte toi</button>
+    <button mat-raised-button color="primary" [routerLink]="['/login']" routerLinkActive="router-link-active">
+      Déjà un compte ? connecte toi
+    </button>
   </div>
 </div>
