@@ -94,3 +94,25 @@ def get_present_players():
     } for player in players if player.id not in absent_players]
 
     return jsonify(present_players), 200
+
+
+# make an endpoint to get all absent players on a given match
+@absence_bp.route('/absences/absent', methods=['GET'])
+def get_absent_players():
+    match_id = request.args.get('match_id')
+    if not match_id:
+        return jsonify({'message': 'Missing match_id.'}), 400
+    match = Match.query.get(match_id)
+    if not match:
+        return jsonify({'message': 'Match not found.'}), 404
+    match_date = match.date.date()
+    # absent players are those who are absent on the given match date
+    absences = Absence.query.filter_by(date_of_absence=match_date).all()
+    absent_players = [{
+        'id': absence.player_id,
+        'name': User.query.get(absence.player_id).name,
+        'email': User.query.get(absence.player_id).email,
+        'role': User.query.get(absence.player_id).role
+    } for absence in absences]
+
+    return jsonify(absent_players), 200

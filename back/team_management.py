@@ -45,14 +45,10 @@ def create_random_team():
 
     # Fill the player_play_count Counter with the query results
     player_play_count = Counter({player_id: times_played for player_id, times_played in player_team_counts})
-    print(player_play_count)
     # Filter players based on absences
-    print(match.date.date())
     match_date = match.date.date()
     #print all absences
-    print(Absence.query.all())
     absences = Absence.query.filter_by(date_of_absence=match_date).all()
-    print(absences)
     absent_players = [absence.player_id for absence in absences]
 
     # Prioritize players based on their play count
