@@ -12,11 +12,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { Match } from '../../interfaces/match';
+import { CustomDatePipe } from '../../pipe/date.pipe';
 // import { enUS } from 'date-fns/locale';
 
 @Component({
   selector: 'app-absence-management',
   standalone: true,
+  templateUrl: './absence-management.component.html',
+  styleUrl: './absence-management.component.scss',
   imports: [
     CommonModule,
     HttpClientModule,
@@ -30,18 +34,21 @@ import { RouterModule } from '@angular/router';
     MatInputModule,
     MatToolbarModule,
     NgxMultipleDatesModule,
+    CustomDatePipe,
   ],
-  templateUrl: './absence-management.component.html',
-  styleUrl: './absence-management.component.scss',
 })
 export class AbsenceManagementComponent {
   dateAbsences?: Date[];
+  matches: Match[] = [];
 
   constructor(private apiService: ApiService) {
     this.apiService.getAbsences().subscribe((absences) => {
       this.dateAbsences = absences.map(
-        (absence) => new Date(absence.date_of_absence)
+        (absence) => new Date(absence.date_of_absence),
       );
+    });
+    this.apiService.getMatches().subscribe((matches) => {
+      this.matches = matches;
     });
   }
 

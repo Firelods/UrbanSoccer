@@ -7,3 +7,11 @@
   visibility: hidden;
   height: 0px;
 }
+
+.matches {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  height: 20vh;
+  overflow: auto;
+}

@@ -1,6 +1,13 @@
 <div class="container">
   <button mat-raised-button color="primary" routerLink="/matches">Matchs</button>
-
+  <div class="matches">
+    @for (match of matches; track $index) {
+      <!-- show date and time in good format for each map -->
+      <div class="match">
+        <h2>Match contre {{ match.opponent }} le {{ match.date | datePipe }}</h2>
+      </div>
+    }
+  </div>
   <!-- <mat-calendar [(selected)]="selectedDate"></mat-calendar> -->
   <mat-form-field class="hidden">
     <ngx-multiple-dates [matDatepicker]="pickerCalendar" placeholder="Calendar" name="modelCalendar" [(ngModel)]="dateAbsences">
