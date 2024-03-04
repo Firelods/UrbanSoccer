@@ -65,7 +65,7 @@ def create_random_team():
 
     # Team creation logic (similar to before, but consider play count)
     new_team = Team(name=f'Team {match.id}')
-    roles_needed = {'Gardien': 1, 'DÃ©fenseur': 2, 'Attaquant': 2}
+    roles_needed = {'Gardien': 1, 'Défenseur': 2, 'Attaquant': 2}
     for role, count_needed in roles_needed.items():
         role_players = [player for player in present_players if player.role == role]
         for player in role_players[:count_needed]:
