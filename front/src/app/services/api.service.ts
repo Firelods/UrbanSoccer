@@ -14,7 +14,7 @@ import { NotificationService } from './notification.service';
 export class ApiService {
   constructor(
     private eventService: NotificationService,
-    private http: HttpClient
+    private http: HttpClient,
   ) {}
 
   someFunction() {
@@ -28,7 +28,7 @@ export class ApiService {
 
   getAvailablePlayersOnMatch(match: Match) {
     return this.http.get(
-      `${environment.apiUrl}/absences/present?match_id=${match.id}`
+      `${environment.apiUrl}/absences/present?match_id=${match.id}`,
     );
   }
 
@@ -44,14 +44,14 @@ export class ApiService {
     // set date format YYYY-MM-DD HH:MM
     return this.http.post<{ message: string; match: Match }>(
       `${environment.apiUrl}/matches`,
-      match
+      match,
     );
   }
 
   createTeam(match: Match) {
     return this.http.post<{ message: string; team: Team }>(
       `${environment.apiUrl}/team/random`,
-      { match_id: match.id }
+      { match_id: match.id },
     );
   }
 
@@ -71,7 +71,7 @@ export class ApiService {
         if (!absences.find((a) => a.date_of_absence === date)) {
           this.recordAbsence(date).subscribe(() => {
             this.eventService.sendSnackBarMessage(
-              `Absence enregistrée pour le ${date}\n`
+              `Absence enregistrée pour le ${date}\n`,
             );
           });
         }
@@ -81,5 +81,11 @@ export class ApiService {
 
   getAbsences(): Observable<Absence[]> {
     return this.http.get<Absence[]>(`${environment.apiUrl}/absences`);
+  }
+
+  getAbsenceToMatch(match_id: number) {
+    return this.http.get<Player[]>(
+      `${environment.apiUrl}/absences/absent?match_id=${match_id}`,
+    );
   }
 }

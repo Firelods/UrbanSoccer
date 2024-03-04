@@ -47,9 +47,11 @@ export class PitchComponent {
     name: 'Equipe 1',
     players: [],
   };
+  absentPlayers: Player[] = [];
   errorGenerate: string = '';
   isAdmin: boolean;
-
+  counterAttaquant = 0;
+  counterDefenseur = 0;
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -67,7 +69,6 @@ export class PitchComponent {
     }
     this.apiService.getMatch(parseInt(id)).subscribe((response: Match) => {
       this.match = response;
-      console.log(this.match);
       // format date with time
       let date = new Date(this.match.date);
       this.date = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
@@ -79,6 +80,9 @@ export class PitchComponent {
             this.setAllPlayersPosition();
           });
       }
+    });
+    this.apiService.getAbsenceToMatch(parseInt(id)).subscribe((response) => {
+      this.absentPlayers = response;
     });
   }
 
@@ -116,30 +120,24 @@ export class PitchComponent {
       Défenseur: [
         { x: 200, y: 450 },
         { x: 200, y: 250 },
+        { x: 350, y: 350 },
       ],
       Attaquant: [
         { x: 500, y: 250 },
         { x: 500, y: 450 },
+        { x: 350, y: 350 },
       ],
     };
 
     if (role === 'Défenseur' || role === 'Attaquant') {
       // Gérer le cas où il y a plusieurs joueurs avec le même rôle
       if (role === 'Défenseur') {
-        if (this.rolePlaced.includes('Défenseur')) {
-          player.position = positions[role][1];
-          return;
-        }
-        this.rolePlaced.push(role);
-        player.position = positions[role][0];
+        player.position = positions[role][this.counterDefenseur];
+        this.counterDefenseur++;
         return;
       } else if (role === 'Attaquant') {
-        if (this.rolePlaced.includes('Attaquant')) {
-          player.position = positions[role][1];
-          return;
-        }
-        this.rolePlaced.push(role);
-        player.position = positions[role][0];
+        player.position = positions[role][this.counterAttaquant];
+        this.counterAttaquant++;
         return;
       }
     }

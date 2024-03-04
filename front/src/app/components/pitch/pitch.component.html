@@ -20,6 +20,12 @@
         </text>
       </g>
     </svg>
+    @if (absentPlayers.length > 0) {
+      <h2>Joueurs absents à cette date</h2>
+      @for (player of absentPlayers; track $index) {
+        <h3>{{ player.role }} : {{ player.name }}</h3>
+      }
+    }
   } @else {
     <p>Vous n'avez pas encore de composition pour ce match.</p>
     <mat-error *ngIf="errorGenerate"> Erreur lors de la génération de l'équipe : {{ errorGenerate }} </mat-error>
