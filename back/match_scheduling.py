@@ -59,3 +59,27 @@ def get_match(match_id):
         'opponent': match.opponent,
         'team_id': match.team_id
     }), 200
+
+#endpoint to modify a match
+@match_bp.route('/matches/<int:match_id>', methods=['PUT'])
+def modify_match(match_id):
+    data = request.get_json()
+    match = Match.query.get(match_id)
+    if not match:
+        return jsonify({'message': 'Match not found.'}), 404
+    if 'date' in data:
+        date = data['date']
+        if len(date) != 16 or date[4] != '-' or date[7] != '-' or date[10] != ' ' or date[13] != ':':
+            return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD HH:MM.'}), 400
+        date = datetime.strptime(date, '%Y-%m-%d %H:%M')
+        match.date = date
+    if 'opponent' in data:
+        match.opponent = data['opponent']
+    db.session.commit()
+
+    return jsonify({'message': 'Match modified successfully.', 'match': {
+        'id': match.id,
+        'date': match.date,
+        'opponent': match.opponent,
+        'team_id': match.team_id
+    }}), 200
