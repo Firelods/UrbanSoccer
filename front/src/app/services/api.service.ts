@@ -48,6 +48,22 @@ export class ApiService {
     );
   }
 
+  putMatch(id: number, match: Match) {
+    // set date format YYYY-MM-DD HH:MM
+    let date = new Date(match.date)
+      .toISOString()
+      .split('.')[0]
+      .replace('T', ' ');
+    date = date.slice(0, -3);
+    return this.http.put<{ message: string; match: Match }>(
+      `${environment.apiUrl}/matches/${id}`,
+      {
+        date: date,
+        opponent: match.opponent,
+      },
+    );
+  }
+
   createTeam(match: Match) {
     return this.http.post<{ message: string; team: Team }>(
       `${environment.apiUrl}/team/random`,
