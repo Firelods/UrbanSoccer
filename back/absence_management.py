@@ -23,6 +23,9 @@ def record_absence():
     date = data['date']
     if len(date) != 10 or date[4] != '-' or date[7] != '-':
         return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD.'}), 400
+    # first check if the player is already absent on the given date
+    if Absence.query.filter_by(player_id=player.id, date_of_absence=date).first():
+        return jsonify({'message': 'Player is already absent on the given date.'}), 409
     # make date in python datetime format
     date = datetime.strptime(date, '%Y-%m-%d')
     new_absence = Absence(player_id=player.id, date_of_absence=date, reason=data.get('reason'))
