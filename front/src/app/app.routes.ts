@@ -7,6 +7,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { MatchesComponent } from './components/matches/matches.component';
 import { AuthGuard } from './guard/auth.guard';
 import { ProfileComponent } from './components/profile/profile.component';
+import { GestionJoueurComponent } from './components/gestion-joueur/gestion-joueur.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -24,5 +25,10 @@ export const routes: Routes = [
   },
   { path: 'pitch/:id', component: PitchComponent, canActivate: [AuthGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+  {
+    path: 'activity',
+    component: GestionJoueurComponent,
+    canActivate: [AuthGuard],
+  },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
 ];

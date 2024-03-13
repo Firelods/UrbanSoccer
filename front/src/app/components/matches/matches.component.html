@@ -47,6 +47,7 @@
   </div>
 
   @if (this.isAdmin) {
+    <button mat-raised-button color="primary" [routerLink]="['/activity']" routerLinkActive="router-link-active">Voir Joueurs</button>
     <form [formGroup]="newMatchForm" (ngSubmit)="onPost()">
       <h2>Créer un nouveau match</h2>
       <mat-form-field>

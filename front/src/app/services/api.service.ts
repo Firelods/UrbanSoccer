@@ -104,4 +104,10 @@ export class ApiService {
       `${environment.apiUrl}/absences/absent?match_id=${match_id}`,
     );
   }
+
+  getPlayersActivity() {
+    return this.http.get<{ name: string; matches_count: number }[]>(
+      `${environment.apiUrl}/players/matches`,
+    );
+  }
 }
