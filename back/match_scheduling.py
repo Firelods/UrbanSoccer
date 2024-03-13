@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import request, jsonify, Blueprint
 
-from sqllite import Match, db
+from sqllite import Match, db, TeamPlayers, User
 
 match_bp = Blueprint('matches', __name__, url_prefix='/')
 
@@ -83,3 +83,22 @@ def modify_match(match_id):
         'opponent': match.opponent,
         'team_id': match.team_id
     }}), 200
+
+
+#endpoint to see all players and their count of matches
+
+@match_bp.route('/players/matches', methods=['GET'])
+def get_players_matches():
+    matches = Match.query.all()
+    players_matches = []
+    for match in matches:
+        team_players = TeamPlayers.query.filter_by(team_id=match.team_id).all()
+        for team_player in team_players:
+            player = User.query.get(team_player.player_id)
+            player_info = next((item for item in players_matches if item["name"] == player.name), None)
+            if player_info:
+                player_info['matches_count'] += 1
+            else:
+                players_matches.append({'name': player.name, 'matches_count': 1})
+
+    return jsonify(players_matches), 200
