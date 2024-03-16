@@ -27,7 +27,7 @@ export class ApiService {
   }
 
   getAvailablePlayersOnMatch(match: Match) {
-    return this.http.get(
+    return this.http.get<Player[]>(
       `${environment.apiUrl}/absences/present?match_id=${match.id}`,
     );
   }
@@ -109,5 +109,12 @@ export class ApiService {
     return this.http.get<{ name: string; matches_count: number }[]>(
       `${environment.apiUrl}/players/matches`,
     );
+  }
+
+  updatePlayerMatch(idMatch:number, lastIdPlayer:number, idPlayer:number) {
+    return this.http.put(`${environment.apiUrl}/matches/${idMatch}/player/`, {
+      id: idPlayer,
+      lastId: lastIdPlayer,
+    });
   }
 }

@@ -11,6 +11,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { catchError, of } from 'rxjs';
 import { CustomDatePipe } from '../../pipe/date.pipe';
 import { AuthService } from '../../services/auth.service';
+import { MatSelectModule } from '@angular/material/select';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-pitch',
@@ -24,6 +27,7 @@ import { AuthService } from '../../services/auth.service';
     MatFormFieldModule,
     RouterModule,
     CustomDatePipe,
+    MatSelectModule, MatFormFieldModule, MatInputModule, FormsModule
   ],
 })
 export class PitchComponent {
@@ -48,10 +52,13 @@ export class PitchComponent {
     players: [],
   };
   absentPlayers: Player[] = [];
+  playersAvailable: Player[] = [];
   errorGenerate: string = '';
   isAdmin: boolean;
   counterAttaquant = 0;
   counterDefenseur = 0;
+  modification = false;
+
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
@@ -59,6 +66,7 @@ export class PitchComponent {
     private authService: AuthService,
   ) {
     this.isAdmin = this.authService.isAdmin();
+
   }
 
   ngOnInit(): void {
@@ -83,6 +91,9 @@ export class PitchComponent {
     });
     this.apiService.getAbsenceToMatch(parseInt(id)).subscribe((response) => {
       this.absentPlayers = response;
+    });
+    this.apiService.getAvailablePlayersOnMatch(this.match).subscribe((response) => {
+      this.playersAvailable = response;
     });
   }
 
@@ -142,5 +153,18 @@ export class PitchComponent {
       }
     }
     player.position = positions[role as keyof typeof positions][0];
+  }
+
+  updatePlayer(event: any, player: Player) {
+    if (!this.match.id) {
+      return
+    }
+    this.apiService.updatePlayerMatch(this.match.id, player.id, event.value).subscribe(() => {
+      this.modification = false;
+    });
+  }
+
+  modify() {
+    this.modification = true;
   }
 }

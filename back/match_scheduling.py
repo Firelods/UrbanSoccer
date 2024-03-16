@@ -102,3 +102,19 @@ def get_players_matches():
                 players_matches.append({'name': player.name, 'matches_count': 1})
 
     return jsonify(players_matches), 200
+
+# endpoint to update player in a match like  this.http.put(`${environment.apiUrl}/matches/${idMatch}/player/`,{id, last_id})
+@match_bp.route('/matches/<int:match_id>/player', methods=['PUT'])
+def update_player_in_match(match_id):
+    data = request.get_json()
+    match = Match.query.get(match_id)
+    if not match:
+        return jsonify({'message': 'Match not found.'}), 404
+    if not all(key in data for key in ['id', 'last_id']):
+        return jsonify({'message': 'Missing data for updating player in match.'}), 400
+    team_player = TeamPlayers.query.filter_by(player_id=data['last_id'], team_id=match.team_id).first()
+    if not team_player:
+        return jsonify({'message': 'Player not found in the team.'}), 404
+    team_player.player_id = data['id']
+    db.session.commit()
+    return jsonify({'message': 'Player updated successfully.'}), 200

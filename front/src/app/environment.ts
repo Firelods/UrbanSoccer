@@ -1,5 +1,5 @@
 // environment url api
 export const environment = {
   production: false,
-  apiUrl: 'https://urban-soccer-api.clement-lefevre.fr', //'http://localhost:5000',
+  apiUrl: 'http://localhost:5000', //'https://urban-soccer-api.clement-lefevre.fr',
 };
