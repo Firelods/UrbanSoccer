@@ -111,10 +111,10 @@ export class ApiService {
     );
   }
 
-  updatePlayerMatch(idMatch:number, lastIdPlayer:number, idPlayer:number) {
-    return this.http.put(`${environment.apiUrl}/matches/${idMatch}/player/`, {
+  updatePlayerMatch(idMatch: number, lastIdPlayer: number, idPlayer: number) {
+    return this.http.put(`${environment.apiUrl}/matches/${idMatch}/player`, {
       id: idPlayer,
-      lastId: lastIdPlayer,
+      last_id: lastIdPlayer,
     });
   }
 }

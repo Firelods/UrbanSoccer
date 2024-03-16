@@ -4,17 +4,17 @@
   </h1>
   @if (match.team_id != null) {
     @for (player of team.players; track $index) {
-      <h3>{{ player.role }} : 
+      <h3>
+        {{ player.role }} :
         @if (!modification) {
-        {{ player.name }}
-        }
-        @else {
+          {{ player.name }}
+        } @else {
           <!-- select between all players -->
-            <mat-select [(value)]="player.id" (selectionChange)="updatePlayer($event, player)">
-              <mat-option *ngFor="let playerselect of playersAvailable" [value]="playerselect.id">
-                {{ playerselect.name }}
-              </mat-option>
-            </mat-select>
+          <mat-select [value]="player.id" (selectionChange)="updatePlayer($event, player)">
+            <mat-option *ngFor="let playerselect of playersAvailable" [value]="playerselect.id">
+              {{ playerselect.name }}
+            </mat-option>
+          </mat-select>
         }
       </h3>
     }
