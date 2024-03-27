@@ -14,6 +14,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-pitch',
@@ -27,7 +28,10 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     RouterModule,
     CustomDatePipe,
-    MatSelectModule, MatFormFieldModule, MatInputModule, FormsModule
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
   ],
 })
 export class PitchComponent {
@@ -64,9 +68,9 @@ export class PitchComponent {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
+    private eventService: NotificationService,
   ) {
     this.isAdmin = this.authService.isAdmin();
-
   }
 
   ngOnInit(): void {
@@ -92,9 +96,11 @@ export class PitchComponent {
     this.apiService.getAbsenceToMatch(parseInt(id)).subscribe((response) => {
       this.absentPlayers = response;
     });
-    this.apiService.getAvailablePlayersOnMatch(this.match).subscribe((response) => {
-      this.playersAvailable = response;
-    });
+    this.apiService
+      .getAvailablePlayersOnMatch(this.match)
+      .subscribe((response) => {
+        this.playersAvailable = response;
+      });
   }
 
   createTeam() {
@@ -157,11 +163,37 @@ export class PitchComponent {
 
   updatePlayer(event: any, player: Player) {
     if (!this.match.id) {
-      return
+      return;
     }
-    this.apiService.updatePlayerMatch(this.match.id, player.id, event.value).subscribe(() => {
-      this.modification = false;
-    });
+    this.apiService
+      .updatePlayerMatch(this.match.id, player.id, event.value)
+      .pipe(
+        catchError((error) => {
+          if (error.status === 401) {
+            this.eventService.sendSnackBarMessage(
+              `Impossible de modifier le joueur ${error.message}`,
+            );
+          }
+          // rethrow the error to be caught by the final subscribe block if needed
+          return of(error);
+        }),
+      )
+      .subscribe((res) => {
+        this.modification = false;
+        if (res.status > 300) {
+          return;
+        }
+        this.eventService.sendSnackBarMessage(
+          `Joueur ${player.name} modifié pour le match ${this.match.id}`,
+        );
+        player.id = event.value;
+        let playerAdded = this.playersAvailable.find(
+          (p) => p.id === event.value,
+        );
+        if (playerAdded) {
+          player.name = playerAdded.name;
+        }
+      });
   }
 
   modify() {
