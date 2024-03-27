@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import pytz
 from flask import request, jsonify, Blueprint
 
 from sqllite import Match, db, TeamPlayers, User
@@ -19,10 +19,17 @@ def schedule_match():
     date = data['date']
     if len(date) != 16 or date[4] != '-' or date[7] != '-' or date[10] != ' ' or date[13] != ':':
         return jsonify({'message': 'Invalid date format. Use YYYY-MM-DD HH:MM.'}), 400
-    # make date in python datetime format
-    date = datetime.strptime(date, '%Y-%m-%d %H:%M')
+    # the date received is in France timezone, we need to convert it to UTC
+    # Convertir la date en format datetime avec le fuseau horaire de France
+    paris_tz = pytz.timezone('Europe/Paris')
+    naive_date = datetime.strptime(date, '%Y-%m-%d %H:%M')
+    local_date = paris_tz.localize(naive_date)
 
-    new_match = Match(date=date, opponent=data['opponent'])
+    # Convertir en UTC
+    utc_date = local_date.astimezone(pytz.utc)
+
+    new_match = Match(date=utc_date, opponent=data['opponent'])
+
     db.session.add(new_match)
     db.session.commit()
 
