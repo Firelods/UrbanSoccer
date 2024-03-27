@@ -17,6 +17,7 @@ import { CustomDatePipe } from '../../pipe/date.pipe';
 import { MatCardModule } from '@angular/material/card';
 import { AuthService } from '../../services/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import moment from 'moment-timezone';
 
 @Component({
   selector: 'app-matches',
@@ -82,15 +83,22 @@ export class MatchesComponent {
   modify(match: Match) {
     this.matchModify = match;
     this.changeDetector.detectChanges();
-    this.dateOfMatchToModify = new Date(this.matchModify.date)
-      .toISOString()
-      .split('.')[0];
-    this.datetime.nativeElement.value = this.dateOfMatchToModify;
+    /// Convertissez la date UTC en date locale de Paris
+    const parisDate = moment(this.matchModify.date).tz('Europe/Paris').format('YYYY-MM-DDTHH:mm');
+
+    this.datetime.nativeElement.value = parisDate;
   }
 
   validate() {
     if (this.matchModify) {
-      this.matchModify.date = new Date(this.datetime.nativeElement.value);
+      const dateInParis = moment.tz(this.datetime.nativeElement.value, 'YYYY-MM-DDTHH:mm', 'Europe/Paris');
+
+      // Convertit ensuite cet objet moment au format UTC ISO8601 sans changer l'heure
+      // Cela crée une représentation de la même heure locale mais en format UTC
+      const dateInUTC = dateInParis.clone().utc().format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+
+      // Ajuste l'objet Match pour utiliser cette nouvelle représentation UTC
+      this.matchModify.date = new Date(dateInUTC);
     }
     if (this.matchModify && this.matchModify.id) {
       this.modifying = true;

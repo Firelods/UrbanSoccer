@@ -15,7 +15,7 @@ export class ApiService {
   constructor(
     private eventService: NotificationService,
     private http: HttpClient,
-  ) {}
+  ) { }
 
   someFunction() {
     // When you want to show a snackbar
@@ -111,7 +111,7 @@ export class ApiService {
     );
   }
 
-  updatePlayerMatch(idMatch:number, lastIdPlayer:number, idPlayer:number) {
+  updatePlayerMatch(idMatch: number, lastIdPlayer: number, idPlayer: number) {
     return this.http.put(`${environment.apiUrl}/matches/${idMatch}/player/`, {
       id: idPlayer,
       lastId: lastIdPlayer,
